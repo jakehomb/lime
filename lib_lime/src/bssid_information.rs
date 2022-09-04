@@ -1,14 +1,15 @@
+use std::collections::HashSet;
 
 pub struct BSSID {
     ssid: String,
-    channel_num: u8,
+    channels: HashSet<u8>,
 }
 
 impl BSSID {
     pub fn new(ssid: String) -> BSSID {
         BSSID {
             ssid: ssid,
-            channel_num: 0,
+            channels: HashSet::new(),
         }
     }
 
@@ -16,8 +17,12 @@ impl BSSID {
         &self.ssid
     }
 
-    pub fn get_channel_num(&self) -> u8 {
-        self.channel_num
+    pub fn get_channels(&self) -> &HashSet<u8> {
+        &self.channels
+    }
+
+    pub fn add_channel(&mut self, channel: u8) {
+        self.channels.insert(channel);
     }
 }
 
@@ -25,7 +30,7 @@ impl Default for BSSID {
     fn default() -> BSSID {
         BSSID {
             ssid: String::new(),
-            channel_num: 0,
+            channels: HashSet::new(),
         }
     }
 }
