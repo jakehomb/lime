@@ -1,13 +1,8 @@
 use pcap_file::pcap::Packet;
 use pcap_file::PcapReader;
-use std::sync::Mutex;
-use lazy_static::lazy_static;
-use std::collections::HashMap;
 use lib_lime::packet::{is_beacon, is_probe, get_packet_channel};
 
-lazy_static! {
-    static ref DISCOVERED: Mutex<HashMap<String, lib_lime::bssid_information::BSSID>> = Mutex::new(HashMap::new());
-}
+mod result_cache;
 
 fn main() {
     let mut input = std::io::stdin();
@@ -24,8 +19,6 @@ fn main() {
     });
 }
 
-
-
 fn handle_packet(packet: &Packet) {
     if is_beacon(packet) {
         let bssid = match lib_lime::packet::parser::parse_ssid_from_beacon(packet) {
@@ -38,7 +31,7 @@ fn handle_packet(packet: &Packet) {
     
         let bssid_clone = bssid.clone();
 
-        let was_cached = cache_ssid(bssid);
+        let was_cached = result_cache::cache_ssid(bssid);
 
         if !was_cached {
             println!("Beacon for SSID: {}", bssid_clone.to_string());
@@ -60,16 +53,3 @@ fn handle_packet(packet: &Packet) {
     }
 }
 
-fn cache_ssid(ssid: String) -> bool{
-    let mut discovered = DISCOVERED.lock().unwrap();
-    if !discovered.contains_key(&ssid) {
-        let ssid_copy = ssid.clone();
-        let bssid = lib_lime::bssid_information::BSSID::new(ssid);
-        let ssid = bssid.get_ssid().clone().to_string();
-        discovered.insert(ssid, bssid);
-        
-        println!("Discovered SSID: {}", ssid_copy);
-        return false;
-    } 
-    return true;
-}
