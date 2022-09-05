@@ -16,5 +16,10 @@ I am working primarily on windows/macbook and I don't have Kismet installed. The
     - gRPC is something I have been meaning to learn a bit more on. I will likely try to expose at least a gRPC interface for this.
     - REST api can also be implemented fairly easily for this as well. 
 
-### Dependencies
-Because I am writing a gRPC interface, the build steps are currently failing to compile the protobuf stuff. Will be fixed shortly
+## Build Actions
+
+The build actions/build tag should indicate any issues with the build process and be accurate at this point. The build depends on protoc being installed, so if you are having issues with the build process you can follow the tonic guide to ensure it is installed.
+
+## Test scripts
+
+In the scripts/ directory, there is a test script to pull the data from the gRPC server that the lime application starts. This is dependent on grpcurl, which can be grabbeed from [here](https://github.com/fullstorydev/grpcurl)
