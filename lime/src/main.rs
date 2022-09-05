@@ -2,9 +2,19 @@ use pcap_file::pcap::Packet;
 use pcap_file::PcapReader;
 use lib_lime::packet::{is_beacon, is_probe, get_packet_channel};
 
-mod result_cache;
+use lib_lime::api::server;
+use lib_lime::cache;
 
-fn main() {
+#[tokio::main]
+async fn main() {
+    tokio::spawn(async {
+        println!("Starting gRPC server");
+        server::run_grpc_server().await.unwrap();
+    });
+
+    cache::add_bssid("Outlook Guest".to_string());
+    cache::add_probe("Outlook Home".to_string());
+
     let mut input = std::io::stdin();
 
     PcapReader::new(&mut input).unwrap().for_each(|packet| {
@@ -31,7 +41,7 @@ fn handle_packet(packet: &Packet) {
     
         let bssid_clone = bssid.clone();
 
-        let was_cached = result_cache::cache_ssid(bssid);
+        let was_cached = false;
 
         if !was_cached {
             println!("Beacon for SSID: {}", bssid_clone.to_string());

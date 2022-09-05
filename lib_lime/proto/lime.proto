@@ -1,0 +1,44 @@
+syntax = "proto3";
+package lime;
+
+service Lime {
+    rpc Echo (Message) returns (Message);
+    rpc GetBroadcast(EmptyRequest) returns (BroadcastSSIDs);
+    rpc GetProbes(EmptyRequest) returns (ProbeSSIDs);
+    rpc GetHandshakes(EmptyRequest) returns (Handshakes);
+}
+
+message Message {
+    string name = 1;
+}
+
+message EmptyRequest {
+    // Nothing needed in the request
+}
+
+message BroadcastSSID {
+    string ssid = 1;
+    uint32 channel = 2;
+}
+
+message BroadcastSSIDs {
+    repeated BroadcastSSID ssids = 1;
+}
+
+message ProbeSSID {
+    string ssid = 1;
+    uint32 channel = 2;
+}
+
+message ProbeSSIDs {
+    repeated ProbeSSID ssids = 1;
+}
+
+message Handshake {
+    string ssid = 1;
+    string eapol = 2;
+}
+
+message Handshakes {
+    repeated Handshake handshakes = 1;
+}
