@@ -1,4 +1,5 @@
 name: Rust
+uses: arduino/setup-protoc@v1
 
 on:
   push:
