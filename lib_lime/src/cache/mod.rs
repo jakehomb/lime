@@ -3,16 +3,16 @@ use std::collections::HashMap;
 use std::sync::Mutex;
 
 lazy_static! {
-    static ref BROADCAST: Mutex<HashMap<String, crate::api::server::lime::BroadcastSsid>> = Mutex::new(HashMap::new());
-    static ref PROBES: Mutex<HashMap<String, crate::api::server::lime::ProbeSsid>> = Mutex::new(HashMap::new());
-    static ref HANDSHAKES: Mutex<HashMap<String, crate::api::server::lime::Handshake>> = Mutex::new(HashMap::new());
+    static ref BROADCAST: Mutex<HashMap<String, crate::api::grpc_server::lime::BroadcastSsid>> = Mutex::new(HashMap::new());
+    static ref PROBES: Mutex<HashMap<String, crate::api::grpc_server::lime::ProbeSsid>> = Mutex::new(HashMap::new());
+    static ref HANDSHAKES: Mutex<HashMap<String, crate::api::grpc_server::lime::Handshake>> = Mutex::new(HashMap::new());
 }
 
 #[allow(dead_code)]
 pub fn cache_bssid(bssid: String) -> bool{
     let mut broadcast = BROADCAST.lock().unwrap();
     if !broadcast.contains_key(&bssid) {
-        broadcast.insert(bssid.clone(), crate::api::server::lime::BroadcastSsid {
+        broadcast.insert(bssid.clone(), crate::api::grpc_server::lime::BroadcastSsid {
             ssid: bssid.clone(),
             channel: 1,
         });
@@ -25,7 +25,7 @@ pub fn cache_bssid(bssid: String) -> bool{
 pub fn cache_probe(bssid: String) -> bool {
     let mut probes = PROBES.lock().unwrap();
     if !probes.contains_key(&bssid) {
-        probes.insert(bssid.clone(), crate::api::server::lime::ProbeSsid {
+        probes.insert(bssid.clone(), crate::api::grpc_server::lime::ProbeSsid {
             ssid: bssid.clone(),
             channel: 1,
         });
@@ -38,7 +38,7 @@ pub fn cache_probe(bssid: String) -> bool {
 pub fn cache_handshake(bssid: String) -> bool {
     let mut handshakes = HANDSHAKES.lock().unwrap();
     if !handshakes.contains_key(&bssid) {
-        handshakes.insert(bssid.clone(), crate::api::server::lime::Handshake {
+        handshakes.insert(bssid.clone(), crate::api::grpc_server::lime::Handshake {
             ssid: bssid.clone(),
             eapol: "test_eapol".to_string(),
         });
@@ -65,7 +65,7 @@ pub fn get_handshake_count() -> usize {
     return handshakes.len();
 }
 
-pub fn get_bssids() -> Vec<crate::api::server::lime::BroadcastSsid> {
+pub fn get_bssids() -> Vec<crate::api::grpc_server::lime::BroadcastSsid> {
     let broadcast = BROADCAST.lock().unwrap();
     let mut result = Vec::new();
     for (_, value) in broadcast.iter() {
@@ -94,7 +94,7 @@ pub fn get_probe_list() -> Vec<String> {
     return probe_list;
 }
 
-pub fn get_probes() -> Vec<crate::api::server::lime::ProbeSsid> {
+pub fn get_probes() -> Vec<crate::api::grpc_server::lime::ProbeSsid> {
     let probes = PROBES.lock().unwrap();
     let mut result = Vec::new();
     for (_, value) in probes.iter() {
@@ -116,7 +116,7 @@ pub fn get_handshake_list() -> Vec<String> {
 
 pub fn add_bssid(bssid: String) {
     let mut broadcast = BROADCAST.lock().unwrap();
-    broadcast.insert(bssid.clone(), crate::api::server::lime::BroadcastSsid {
+    broadcast.insert(bssid.clone(), crate::api::grpc_server::lime::BroadcastSsid {
         ssid: bssid.clone(),
         channel: 1,
     });
@@ -124,7 +124,7 @@ pub fn add_bssid(bssid: String) {
 
 pub fn add_probe(bssid: String) {
     let mut probes = PROBES.lock().unwrap();
-    probes.insert(bssid.clone(), crate::api::server::lime::ProbeSsid {
+    probes.insert(bssid.clone(), crate::api::grpc_server::lime::ProbeSsid {
         ssid: bssid.clone(),
         channel: 1,
     });
@@ -132,7 +132,7 @@ pub fn add_probe(bssid: String) {
 
 pub fn add_handshake(bssid: String) {
     let mut handshakes = HANDSHAKES.lock().unwrap();
-    handshakes.insert(bssid.clone(), crate::api::server::lime::Handshake {
+    handshakes.insert(bssid.clone(), crate::api::grpc_server::lime::Handshake {
         ssid: bssid.clone(),
         eapol: "test_eapol".to_string(),
     });

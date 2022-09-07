@@ -2,14 +2,14 @@ use pcap_file::pcap::Packet;
 use pcap_file::PcapReader;
 use lib_lime::packet::{is_beacon, is_probe, get_packet_channel};
 
-use lib_lime::api::server;
+use lib_lime::api::grpc_server;
 use lib_lime::cache;
 
 #[tokio::main]
 async fn main() {
     tokio::spawn(async {
         println!("Starting gRPC server");
-        server::run_grpc_server().await.unwrap();
+        grpc_server::run_grpc_server().await.unwrap();
     });
 
     cache::add_bssid("Outlook Guest".to_string());
